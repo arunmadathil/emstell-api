@@ -1,0 +1,23 @@
+{
+    "name": "emstell/product-api",
+    "type": "project",
+    "description": "Product REST Api",
+    "authors": [
+        {
+            "name": "Arun M",
+            "email": "arunm@example.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+          "Product\\":"app/",
+          "Cart\\":"cart/",
+          "Config\\":"config/",
+          "Database\\":"database/"
+        }
+      }
+}
