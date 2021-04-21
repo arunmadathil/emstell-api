@@ -11,7 +11,7 @@ class ProductController
         $products =  (new  Product)->getData();
         //Return result
         header('Content-Type: application/json');
-        echo json_encode(['response' => $products], true);
+        echo json_encode(['status' => 'sucess','response' => $products], true);
     }
 
     public function view() //View product
@@ -22,16 +22,17 @@ class ProductController
             $products =  (new  Product)->getData($_REQUEST['product_id'], $_REQUEST['lang_id']);
             header('Content-Type: application/json');
             if ($products) {
-                echo json_encode(['response' => $products], true);
+                echo json_encode([ 'status' => 'sucess','response' => $products], true);
             } else {
                 http_response_code(200);
-                echo json_encode(['response' => []], true);
+                echo json_encode([ 'status' => 'sucess','response' => []], true);
             }
         } else {
             http_response_code(422);
             header('Content-Type: application/json');
             echo json_encode(
                 [
+                    'status' => 'failed',
                     'response' => [
                         'product_id' => 'Product ID field is required!',
                         'lang_id' => 'Language id field is required!'

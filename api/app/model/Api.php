@@ -1,33 +1,56 @@
 <?php
-namespace Product\model;
-use Database\Db;
 
-class Api
+namespace Product\model;
+
+use Database\Db;
+use DateTime;
+use PDO;
+use Product\coreservice\PreapareStatement;
+
+class Api extends PreapareStatement
 {
-    protected $table = "oc_cart";
+    protected $table = "oc_api";
     protected $db;
-    protected $jointable = "oc_product_attribute";
+    protected $datetime;
+
     public function __construct()
     {
+        $this->datetime = new DateTime();
         $this->db = (new Db())->connect_db();
     }
-    public function create($api_id = null, $clientip = null)
+    public function create(array $params)
     {
-        $query = "INSERT INTO {$this->table} (api_id,ip)
-          VALUES (:api_id, :ip)";
-        $smt = $this->db->prepare($query);
+        $datetime =  $this->datetime;
+        $params['date_added'] = $datetime->format('Y-m-d H:i:s');
+        $params['date_modified'] = $datetime->format('Y-m-d H:i:s');
 
+        $query = "INSERT INTO {$this->table} (`username`,`key`,`status`,`date_added`,`date_modified`)
+        VALUES (:username, :key, :status, :date_added,:date_modified)";
+
+        $smt = $this->db->prepare($query);
         try {
+            $smt_arr = array(
+                ':username' => $params['username'], ':key' =>  $params['key'],
+                ':status' => 1, ':date_added' => $params['date_added'],
+                'date_modified' => $params['date_modified']
+            );
             $this->db->beginTransaction();
-            $smt->execute(array(':api_id' => $api_id, ':ip' =>  $clientip));
+            $smt->execute($smt_arr);
+            $db_id = $this->db->lastInsertId();
             $this->db->commit();
-            return $this->db->lastInsertId();
+
+            return $db_id;
         } catch (\PDOExecption  $e) {
             $this->db->rollback();
             print "Error!: " . $e->getMessage() . "</br>";
         }
     }
-    public function update()
-    {
+
+    public function get(){
+        
+        $query = "SELECT * FROM {$this->table} ORDER BY api_id ASC LIMIT 1 "; 
+        $smt = $this->db->prepare($query);
+        $smt->execute();
+        return $smt->fetch();
     }
 }
