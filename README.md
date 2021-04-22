@@ -16,8 +16,28 @@
 
 `3. {base_url}/api/cart/add.php -> POST`
 
+   Params:
+    `{
+      product_id,
+      lang_id ,
+      customer_id
+    }`
+
 `4. {base_url}/api/cart/view.php -> GET`
+
+ Params:
+    `{
+      customer_id,
+    }`
 
 `5. {base_url}/api/cart/update.php -> POST`
 
 `5. {base_url}/api/cart/checkout.php -> POST`
+
+Params:
+    `{
+      product_id,
+      lang_id ,
+      customer_id,
+      quantity:(optional)
+    }`
