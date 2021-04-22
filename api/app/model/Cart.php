@@ -4,6 +4,7 @@ namespace Product\model;
 
 use Database\Db;
 use DateTime;
+use PDO;
 
 class Cart
 {
@@ -51,14 +52,14 @@ class Cart
         return $smt->fetchObject(__CLASS__);
     }
 
-    public function count($product_id,$customer_id)
+    public function count($product_id, $customer_id)
     {
         $query = "SELECT count(*) FROM {$this->table} where product_id = :product_id AND customer_id = :customer_id";
         $smt = $this->db->prepare($query);
-        $smt->execute(['product_id' => $product_id,'customer_id' => $customer_id]);
+        $smt->execute(['product_id' => $product_id, 'customer_id' => $customer_id]);
         return $smt->fetch();
     }
-    
+
     public function update(array $params)
     {
         $this->create($params);
@@ -75,11 +76,28 @@ class Cart
                 $this->db->commit();
                 return true;
             }
-        } 
-        catch (\PDOExecption $e) 
-        {
+        } catch (\PDOExecption $e) {
             $this->db->rollback();
             print "Error!: " . $e->getMessage() . "</br>";
         }
+    }
+
+    public function getCustomerCart($customer_id)
+    {
+        $product_option = new ProductOption;
+        $query = "SELECT * from {$this->table} AS  c, oc_product AS p WHERE p.product_id = c.product_id 
+        AND c.customer_id = :customer_id";
+        $smt = $this->db->prepare($query);
+        $smt->execute(['customer_id' => $customer_id]);
+    
+        $result_arr = [];
+        $count = 0;
+        while ($row = $smt->fetch()) {
+            $result_arr[$count]['cart_id'] = $row['cart_id'];
+            $result_arr[$count]['product_id'] = $row['product_id'];
+            $result_arr[$count]['product_options'] = $product_option->get( $row['product_id']);
+            $count++;
+        }
+        return $result_arr;
     }
 }

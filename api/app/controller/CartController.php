@@ -123,6 +123,7 @@ class CartController
                 exit;
             }
         }
+        print 1; exit;
         if (
             isset($_REQUEST['product_id'])
             && isset($_REQUEST['lang_id'])
@@ -196,6 +197,37 @@ class CartController
                     true
                 );
             }
+        }
+    }
+
+    public function view() //View product
+    {   
+
+        if (isset($_REQUEST['customer_id'])) 
+        {
+            $cart = (new Cart)->getCustomerCart($_REQUEST['customer_id']);
+            header('Content-Type: application/json');
+           
+       
+            if ($cart) {
+              
+                echo json_encode([ 'status' => 'sucess','response' => $cart], true);
+            } else {
+                http_response_code(200);
+                echo json_encode([ 'status' => 'sucess','response' => []], true);
+            }
+        } else {
+            http_response_code(422);
+            header('Content-Type: application/json');
+            echo json_encode(
+                [
+                    'status' => 'failed',
+                    'response' => [
+                        'customer_id' => 'Customer ID field is required!',
+                    ]
+                ],
+                true
+            );
         }
     }
 }

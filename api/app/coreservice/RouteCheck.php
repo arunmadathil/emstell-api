@@ -10,8 +10,8 @@ class RouteCheck
         $uri = explode('?', $current_uri);
         if (isset($uri[0])) {
             $routes = include "../config/route.php";
-            foreach ($routes as $key => $method) {
-                if (($key == $uri[0]) && ($method == $_SERVER['REQUEST_METHOD'])) {
+            foreach ($routes as $url => $method) {
+                if ((trim($url) == trim($uri[0])) && (trim($method) == $_SERVER['REQUEST_METHOD'])) {
                     return true;
                 }
             }
