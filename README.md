@@ -32,7 +32,7 @@
 
 `5. {base_url}/api/cart/update.php -> POST`
 
-`5. {base_url}/api/cart/checkout.php -> POST`
+`6. {base_url}/api/cart/checkout.php -> POST`
 
 Params:
     `{
