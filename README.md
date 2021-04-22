@@ -7,6 +7,7 @@
 `1. {base_url}/api/product/listings.php -> GET`
 
 `2. {base_url}/api/product/view.php -> GET`
+
   Params:
     `{
       product_id,
